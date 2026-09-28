@@ -33,6 +33,12 @@ echo "$border"
 grep -oE '[a-zA-Z_][a-zA-Z0-9_]*' "$1" | sort -u | tr '\n' ' '
 echo
 ```
+
+Выдача прав файлу:
+```bash
+chmod +x get_idnf
+```
+
 Файл hello.c:
 ```bash
 #include <stdio.h>
@@ -48,4 +54,128 @@ int main(void) {
 chmod 755 "$1"
 sudo cp "$1" /usr/local/bin/
 echo "Команда '$1' успешно зарегестрирована в /usr/local/bin"
+```
+Выдача прав файлу:
+```bash
+chmod +x reg
+```
+
+## Задача 6
+Написать программу для проверки наличия комментария в первой строке файлов с расширением c, js и py.
+```bash
+for f in *.c *.js *.py; do
+        [ -f  "$f" ] || continue
+
+        if head -n 1 "$f" | grep -qE '^([[:space:]]*//|[[:space:]]*/\*|[[:space:]]*#)'; then
+                echo "$f: есть комментарий"
+        else
+                echo "$f: комментария нет"
+        fi
+done
+```
+
+Выдача прав файлу:
+```bash
+chmod +x check_comm
+```
+
+Создание тестовых файлов:
+```bash
+printf "// комментарий на Си\nint x = 1;\n" > test_ok.c
+printf "x = 1\n" > test_no.py
+printf "x = 1\n" > test_no.py
+```
+
+## Задача 7
+Написать программу для нахождения файлов-дубликатов (имеющих 1 или более копий содержимого) по заданному пути (и подкаталогам)
+Файл find_duplicates:
+```bash
+find "$1" -type f -exec md5sum {} + | sort | uniq -w32 -d
+```
+
+Выдача прав файлу:
+```bash
+chmod +x find_duplicates
+```
+
+Запуск скрипта:
+```bash
+find_duplicates test_dup
+```
+
+## Задача 8
+Написать программу, которая находит все файлы в данном каталоге с расширением, указанным в качестве аргумента и архивирует все эти файлы в архив tar
+
+Файл tar_by:
+```bash
+if [ $# -lt 2 ]; then
+    echo "Использование: $0 <каталог> <расширение>"
+    echo "Пример: $0 . txt"
+    exit 1
+fi
+
+dir="$1"
+ext="${2#.}"
+
+find "$dir" -type f -name "*.$ext" -print0 | tar -cvf archive.tar --null -T -
+```
+
+Выдача прав файлу:
+```bash
+chmod +x tar_by
+```
+
+Создание тестовых файлов:
+```bash
+mkdir -p test_tar
+echo "файл 1" > test_tar/a.txt
+echo "файл 2" > test_tar/b.txt
+echo "не архивировать" > test_tar/ignore.c
+```
+
+Запуск скрипта:
+```bash
+./tar_by_ext test_tar txt
+```
+
+Проверка содержания архива:
+```bash
+tar -tvf archive.tar
+```
+
+## Задача 9
+Написать программу, которая заменяет в файле последовательности из 4 пробелов на символ табуляции. Входной и выходной файлы задаются аргументами
+
+Файл spaces_to_tabs:
+```bash
+if [ $# -lt 2 ]; then
+    echo "Использование: $0 <входной_файл> <выходной_файл>"
+    exit 1
+fi
+sed 's/    /\t/g' "$1" > "$2"
+```
+
+Выдача прав файлу:
+```bash
+chmod +x spaces_to_tabs
+```
+
+Создание файла:
+```bash
+printf "    строка с 4 пробелами в начале\n" > input.txt
+```
+Запуск скрипта:
+```bash
+./spaces_to_tabs input.txt output.txt
+```
+
+Проверка результатов:
+```bash
+cat -A output.txt
+```
+
+## Задача 10
+Написать программу, которая выводит названия всех пустых текстовых файлов в указанной директории. Директория передается в программу параметром
+```bash
+
 ```
