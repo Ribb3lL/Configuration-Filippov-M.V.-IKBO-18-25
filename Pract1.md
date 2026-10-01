@@ -9,7 +9,7 @@ grep -v '^#' /etc/passwd | cut -d: -f1 | sort
 ## Задача 2
 Вывести данные /etc/protocols в отформатированном и отсортированном порядке для 5 наибольших портов
 ```bash
-rep -v '^#' /etc/protocols | awk '{print $2, $1}' | sort -n -r | head -n 5
+grep -v '^#' /etc/protocols | awk '{print $2, $1}' | sort -n -r | head -n 5
 ```
 
 ## Задача 3
@@ -63,6 +63,8 @@ int main(void) {
 
 ## Задача 5
 Написать программу для регистрации пользовательской команды (правильные права доступа и копирование в /usr/local/bin)
+
+Файл reg:
 ```bash
 sudo cp "$1" /usr/local/bin/
 echo "Команда '$1' успешно зарегестрирована в /usr/local/bin"
